@@ -1,6 +1,6 @@
 # RedditStoryBot
 
-Enter your settings into config.py, praw.ini and dbSettings.py
+Enter your settings into config.py, praw.ini (Reddit credentials) and dbSettings.py (MySQL database credentials) 
 
 ```bash
 git clone https://github.com/ZhuoWeiLi/RedditStoryBot/
