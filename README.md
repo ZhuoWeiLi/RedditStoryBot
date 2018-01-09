@@ -6,7 +6,7 @@ Enter your settings into config.py, praw.ini and dbSettings.py
 git clone https://github.com/ZhuoWeiLi/RedditStoryBot/
 cd RedditStoryBot
 ```
-Create the initialize sql tables using initializeTables.sql
+Create your initial sql tables using initializeTables.sql
 
 ```bash
 pip install pymysql requests lxml cssselect praw 
