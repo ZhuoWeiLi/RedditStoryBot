@@ -38,7 +38,7 @@ def populateDB():
                 VALUES (%s, %s, %s, %s);"""
                 cursor.execute(sql, story)
                 connection.commit()
-            except Exception as error:
+            except pymysql.err.IntegrityError as error:
                 logger.exception('From populateDB:' + str(error))
 
     if DEBUG:
@@ -55,11 +55,7 @@ def chooseStoryById(story_id):
     sql = """SELECT * 
     FROM `Stories` 
     WHERE `Id` = '{}'""".format(story_id)
-    try:
-        cursor.execute(sql)
-    except Exception as error:
-        logger.exception('From chooseStoryById:')
-        pass
+    cursor.execute(sql)
     return cursor.fetchone()
 
 
@@ -68,9 +64,5 @@ def chooseRandStory():
     FROM `Stories` 
     ORDER BY RAND ()
     LIMIT 1"""
-    try:
-        cursor.execute(sql)
-    except Exception as error:
-        logger.exception('From chooseRandStory:')
-        return
+    cursor.execute(sql)
     return cursor.fetchone()
