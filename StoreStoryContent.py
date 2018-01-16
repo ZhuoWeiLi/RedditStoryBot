@@ -4,6 +4,13 @@ import requests
 import re
 from StoryScraper import getStoryId
 from dbSettings import settings
+import logging
+import time
+
+logger = logging.getLogger(__name__)
+formatter = logging.Formatter('%(asctime)s:%(levelname)s - %(message)s')
+fileHandler = logging.FileHandler('./Logs/StoreS.log')
+fileHandler.setFormatter(formatter)
 
 connection = pymysql.connect(**settings)
 cursor = connection.cursor()
@@ -41,6 +48,7 @@ def splitText(text):
 # Takes a story chapter and populates an sql table
 # after splitting the content into paragraphs
 def populateStoryContent(url):
+    global connection, cursor
     try:
         r = requests.get(url)
         html = lxml.html.fromstring(r.content)
@@ -52,7 +60,6 @@ def populateStoryContent(url):
     paragraphs = splitText(chapterText)
 
     for i in range(len(paragraphs)):
-        global connection, cursor
         successful = False
         while not successful:
             try:
@@ -63,9 +70,15 @@ def populateStoryContent(url):
                 print(sql)
                 connection.commit()
                 successful = True
-            except:
+            except pymysql.err.OperationalError:
+                logging.exception('From populateStoryContent Operational Err')
                 connection = pymysql.connect(**settings)
                 cursor = connection.cursor()
                 cursor.execute("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED")
+
+            except pymysql.err.InternalError:
+                logging.exception('From populateStoryContent Internal Err')
+                time.sleep(10)
+
     
 

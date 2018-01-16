@@ -105,7 +105,7 @@ def sendReading(username, story_id):
         try:
             cursor.execute(sql)
             successful = True
-        except:
+        except (pymysql.err.OperationalError, TimeoutError):
             logger.exception('From sendReading:')
             connection = pymysql.connect(**settings)
             cursor = connection.cursor()
